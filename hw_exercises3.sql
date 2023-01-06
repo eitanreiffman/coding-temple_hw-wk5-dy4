@@ -1,7 +1,7 @@
 
 --1. Create a Stored Procedure that will insert a new film into the film table with the
 --following arguments: title, description, release_year, language_id, rental_duration,
---rental_rate, length, replace_cost, rating
+--rental_rate, length, replacement_cost, rating
 
 -- Inserting a film without using a Procedure
 
@@ -29,16 +29,17 @@ INSERT INTO film (
 
 -- Inserting a film with a Procedure
 
-CREATE OR REPLACE PROCEDURE add_movie(
-	f_title VARCHAR(255) DEFAULT 'Batman',
-	f_description TEXT DEFAULT 'Caped crusader',
-	f_release_year YEAR DEFAULT '2000',
-	f_language_id int2 DEFAULT 1,
-	f_rental_duration int2 DEFAULT 7,
-	f_rental_rate NUMERIC(4,2) DEFAULT 8.99,
-	f_length int2 DEFAULT 200,
-	f_replacement_cost NUMERIC(5,2) DEFAULT 30.00,
-	f_rating mpaa_rating DEFAULT 'R'
+
+CREATE OR REPLACE PROCEDURE add_film(
+	f_title VARCHAR(255),
+	f_description TEXT,
+	f_release_year YEAR,
+	f_language_id integer,
+	f_rental_duration integer,
+	f_rental_rate NUMERIC(4,2),
+	f_length integer,
+	f_replacement_cost NUMERIC(5,2),
+	f_rating mpaa_rating
 )
 LANGUAGE plpgsql
 AS $$
@@ -67,21 +68,32 @@ BEGIN
 END;
 $$;
     
-CALL add_movie(
+CALL add_film(
 	'The Lord of the Rings: The Fellowship of the Ring',
 	'Four hobbits, one wizard, two men, one elf, and one dwarf seek to destroy an all-powerful ring.',
-	'2001'
---	1,
---	7,
---	6.99,
---	178,
---	20.00,
---	'PG-13'
+	'2001',
+	1,
+	7,
+	6.99,
+	178,
+	20.00,
+	'PG-13'::mpaa_rating
 );
+
+
+DROP PROCEDURE add_film(character varying,text,year,smallint,smallint,numeric,smallint,numeric,mpaa_rating)
 
 SELECT *
 FROM film
 WHERE title LIKE 'The %';
+
+SELECT *
+FROM film
+WHERE film_id = 1003;
+
+DELETE FROM film
+WHERE film_id = 1005;
+
 
 
 --2. Create a Stored Function that will take in a category_id and return the number of
